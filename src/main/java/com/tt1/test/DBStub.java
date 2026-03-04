@@ -43,11 +43,13 @@ public class DBStub {
         return emailAgenda;
     }
 
-    public void markTaskAsCompleted(int index) {
+    public boolean markTaskAsCompleted(int index) {
         ToDo task = findTaskById(index);
         if (task != null) {
             task.setCompletado(true);
+            return true;
         }
+        return false;
     }
     
     public List<ToDo> getToDoList() {

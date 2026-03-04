@@ -1,3 +1,4 @@
+//Tests unitarios para la clase ToDo
 package com.tt1.test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,80 +14,79 @@ class TestToDo {
 
     @BeforeEach
     void setUp() throws Exception {
-        // Inicializamos el objeto ToDo antes de cada test
-        todo = new ToDo("Tarea de ejemplo", "Descripción de la tarea", new Date(), false);
+        todo = new ToDo();
     }
 
+    //Test constructor vacío
     @Test
-    void testGettersAndSetters() {
-        // Arrange: Preparar el objeto ToDo
-        todo.setNombre("Tarea modificada");
-        todo.setDescripcion("Descripción modificada");
-        todo.setFechaLimite(new Date(System.currentTimeMillis() + 1000000000)); 
-        todo.setCompletado(true);
+    void constructorVacio() {
+        // Arrange (ya hecho en @BeforeEach)
 
-        // Act: Obtener los valores a través de los getters
-        String nombre = todo.getNombre();
-        String descripcion = todo.getDescripcion();
-        Date fechaLimite = todo.getFechaLimite();
-        boolean completado = todo.isCompletado();
+        // Act
 
-        // Assert: Verificar que los valores establecidos con los setters son los mismos al obtenerlos
-        assertEquals("Tarea modificada", nombre, "El nombre no coincide.");
-        assertEquals("Descripción modificada", descripcion, "La descripción no coincide.");
-        assertNotNull(fechaLimite, "La fecha límite no debe ser nula.");
-        assertTrue(completado, "El estado de completado no coincide.");
+        // Assert
+        assertNull(todo.getNombre());
+        assertNull(todo.getDescripcion());
+        assertNull(todo.getFechaLimite());
+        assertFalse(todo.isCompletado());
     }
-
+    
+    //Test constructor con parámetros
     @Test
     void testConstructor() {
-        // Act: Verificamos el constructor con parámetros
-        String nombre = todo.getNombre();
-        String descripcion = todo.getDescripcion();
-        Date fechaLimite = todo.getFechaLimite();
-        boolean completado = todo.isCompletado();
+    	// Arrange
+        String nombreEsperado = "Revisar pull request";
+        String descEsperada = "Aprobar cambios en capa de dominio";
+        Date mañana = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000);
+
+        // Act
+        todo = new ToDo(nombreEsperado, descEsperada, mañana, false);
 
         // Assert: Verificamos que los valores pasados en el constructor sean correctos
-        assertEquals("Tarea de ejemplo", nombre, "El nombre no coincide.");
-        assertEquals("Descripción de la tarea", descripcion, "La descripción no coincide.");
-        assertNotNull(fechaLimite, "La fecha límite no debe ser nula.");
-        assertFalse(completado, "El estado de completado no debe ser verdadero.");
+        assertEquals(nombreEsperado, todo.getNombre(), "El nombre no coincide.");
+        assertEquals(descEsperada, todo.getDescripcion(), "La descripción no coincide.");
+        assertSame(mañana, todo.getFechaLimite(), "La fecha límite no coincide.");
+        assertFalse(todo.isCompletado(), "El estado de completado no debe ser verdadero.");
     }
 
+    //Test getNombre y setNombre
     @Test
-    void testSetNombre() {
-        // Act: Cambiar el nombre de la tarea
+    void testNombre() {
+        // Act
         todo.setNombre("Nuevo nombre");
 
-        // Assert: Verificar que el nombre se ha actualizado correctamente
+        // Assert
         assertEquals("Nuevo nombre", todo.getNombre(), "El nombre no fue actualizado correctamente.");
     }
-
+    
+    //Test getDescripcion y setDescripcion
     @Test
-    void testSetDescripcion() {
-        // Act: Cambiar la descripción de la tarea
+    void testDescripcion() {
+        // Act
         todo.setDescripcion("Nueva descripción");
 
-        // Assert: Verificar que la descripción se ha actualizado correctamente
+        // Assert
         assertEquals("Nueva descripción", todo.getDescripcion(), "La descripción no fue actualizada correctamente.");
     }
 
+    //Test getFechaLimite y setFechaLimite
     @Test
-    void testSetFechaLimite() {
-        // Act: Cambiar la fecha límite
+    void testFechaLimite() {
+        // Act
         Date nuevaFecha = new Date(System.currentTimeMillis() + 2000000000);
         todo.setFechaLimite(nuevaFecha);
 
-        // Assert: Verificar que la fecha límite ha sido actualizada correctamente
+        // Assert
         assertEquals(nuevaFecha, todo.getFechaLimite(), "La fecha límite no fue actualizada correctamente.");
     }
 
+    //Test getCompletado y setCompletado
     @Test
-    void testSetCompletado() {
-        // Act: Marcar la tarea como completada
+    void testCompletado() {
+        // Act
         todo.setCompletado(true);
 
-        // Assert: Verificar que la tarea está marcada como completada
+        // Assert
         assertTrue(todo.isCompletado(), "La tarea no fue marcada como completada correctamente.");
     }
 }

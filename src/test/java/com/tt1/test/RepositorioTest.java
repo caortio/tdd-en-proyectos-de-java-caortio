@@ -23,56 +23,67 @@ public class RepositorioTest {
         task1 = new ToDo("Tarea 1", "Descripción 1", new Date(), false);
         task2 = new ToDo("Tarea 2", "Descripción 2", new Date(), false);
     }
-
+    	
+    //Test StoreTask y GetTaskById
     @Test
-    public void testStoreTask() {
-        // Act: Almacenamos una tarea
-        repositorio.storeTask(task1);
-
-        // Assert: Verificamos que la tarea se haya almacenado correctamente en DBStub
-        assertEquals(1, dbStub.getToDoList().size());
-        assertEquals("Tarea 1", dbStub.getToDoList().get(0).getNombre());
-    }
-
-    @Test
-    public void testGetTaskById() {
-        // Arrange: Almacenamos las tareas en el repositorio
+    public void testStoreTask_GetTaskById() {
+        // Act
         repositorio.storeTask(task1);
         repositorio.storeTask(task2);
+        
+        ToDo foundTask1 = repositorio.getTaskById(0); 
+        ToDo foundTask2 = repositorio.getTaskById(1); 
 
-        // Act: Buscamos una tarea por ID
-        ToDo foundTask = repositorio.getTaskById(0); 
-
-        // Assert: Verificamos que la tarea encontrada sea la correcta
-        assertNotNull(foundTask);
-        assertEquals("Tarea 1", foundTask.getNombre());
+        // Assert
+        assertNotNull(foundTask1);
+        assertNotNull(foundTask2);
+        assertEquals("Tarea 1", foundTask1.getNombre());
+        assertEquals("Tarea 2", foundTask2.getNombre());
+        assertSame(task1, foundTask1); 
+        assertSame(task2, foundTask2);
     }
 
+    //Test StoreEmail
+    @Test
+    void testStoreEmail() {
+        //Act
+        repositorio.storeEmail("juan.perez@ejemplo.com");
+        repositorio.storeEmail("ANA.gomez@empresa.com");
+
+        // Assert
+        assertTrue(dbStub.getEmailAgenda().contains("juan.perez@ejemplo.com"));
+        assertTrue(dbStub.getEmailAgenda().contains("ANA.gomez@empresa.com"));
+        assertEquals(2, dbStub.getEmailAgenda().size());
+    }
+
+    //Test MarkTaskCompleted
+    @Test
+    public void testMarkTaskCompleted() {
+        // Arrange
+        repositorio.storeTask(task1);
+
+        // Act
+        boolean exito = repositorio.markTaskCompleted(0);
+
+        // Assert
+        assertTrue(exito);
+        assertTrue(task1.isCompletado());
+    }
+    
+    //Test GetIncompleteTasks
     @Test
     public void testGetIncompleteTasks() {
-        // Arrange: Almacenamos tareas, una de ellas incompleta
+        // Arrange
         task1.setCompletado(false);
         task2.setCompletado(true);
         repositorio.storeTask(task1);
         repositorio.storeTask(task2);
 
-        // Act: Obtenemos las tareas incompletas
+        // Act
         List<ToDo> incompleteTasks = repositorio.getIncompleteTasks();
 
-        // Assert: Verificamos que solo se devuelvan las tareas incompletas
+        // Assert
         assertEquals(1, incompleteTasks.size());
-        assertEquals("Tarea 1", incompleteTasks.get(0).getNombre());
-    }
-
-    @Test
-    public void testMarkTaskCompleted() {
-        // Arrange: Almacenamos una tarea incompleta
-        repositorio.storeTask(task1);
-
-        // Act: Marcamos la tarea como completada
-        repositorio.markTaskCompleted(0);
-
-        // Assert: Verificamos que la tarea fue marcada como completada
-        assertTrue(task1.isCompletado());
-    }
+        assertEquals(task1, incompleteTasks.get(0));
+    }   
 }

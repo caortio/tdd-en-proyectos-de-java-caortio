@@ -32,12 +32,12 @@ public class Servicio {
     }
 
     // Marcar una tarea como completada
-    public void markTaskAsCompleted(int index) {
-        repositorio.markTaskCompleted(index);
+    public boolean markTaskAsCompleted(int index) {
+        return repositorio.markTaskCompleted(index);
     }
 
     // Consultar todas las tareas incompletas
-    public void checkIncompleteTasks() {
+    public List<ToDo> getIncompleteTasks() {
         List<ToDo> incompleteTasks = repositorio.getIncompleteTasks();
         if (incompleteTasks.isEmpty()) {
             System.out.println("No hay tareas incompletas.");
@@ -46,6 +46,7 @@ public class Servicio {
                 System.out.println("Tarea incompleta: " + task.getNombre());
             }
         }
+        return incompleteTasks;
     }
 
     // Revisar tareas vencidas y enviar alertas por correo

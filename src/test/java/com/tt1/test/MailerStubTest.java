@@ -1,3 +1,4 @@
+//Tests unitarios para la clase MailerStub
 package com.tt1.test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,72 +12,76 @@ class MailerStubTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // Inicializamos MailerStub antes de cada test
         mailerStub = new MailerStub();
     }
-
+    
+    //Test SendEmail para datos correctos
     @Test
     void testSendEmailValidInput() {
-        // Arrange: Definir los parámetros de entrada
+        // Arrange
         String email = "test@example.com";
         String message = "Este es un mensaje de prueba.";
 
-        // Act: Llamar al método sendEmail con parámetros válidos
+        // Act
         boolean result = mailerStub.sendEmail(email, message);
 
-        // Assert: Verificar que el envío de correo fue exitoso (suponiendo que implementes esta lógica)
+        // Assert
         assertTrue(result, "El correo no fue enviado correctamente.");
     }
-
+    
+    //Test SendEmail con mensaje vacío
     @Test
     void testSendEmailEmptyMessage() {
-        // Arrange: Definir los parámetros con un mensaje vacío
+        // Arrange
         String email = "test@example.com";
         String message = "";
 
-        // Act: Llamar al método sendEmail con un mensaje vacío
+        // Act
         boolean result = mailerStub.sendEmail(email, message);
 
-        // Assert: Verificar que el correo con mensaje vacío no sea enviado
+        // Assert
         assertFalse(result, "El correo no debería ser enviado con un mensaje vacío.");
     }
-
+    
+    //Test SendEmail con email incorrecto
     @Test
     void testSendEmailInvalidEmail() {
-        // Arrange: Definir un correo electrónico inválido
+        // Arrange
         String email = "invalid-email";
         String message = "Este es un mensaje de prueba.";
 
-        // Act: Llamar al método sendEmail con un correo electrónico inválido
+        // Act
         boolean result = mailerStub.sendEmail(email, message);
 
-        // Assert: Verificar que el correo no se envíe con un email inválido
+        // Assert
         assertFalse(result, "El correo no debería ser enviado con un email inválido.");
     }
 
+    //Test SendEmail con email nulo
     @Test
     void testSendEmailNullEmail() {
-        // Arrange: Definir un correo electrónico nulo
-        String email = null;
+        // Arrange
+    	String email = null;
         String message = "Este es un mensaje de prueba.";
 
-        // Act: Llamar al método sendEmail con un correo nulo
+        // Act
         boolean result = mailerStub.sendEmail(email, message);
 
-        // Assert: Verificar que el correo no se envíe con un correo electrónico nulo
+        // Assert
         assertFalse(result, "El correo no debería ser enviado con un email nulo.");
     }
 
+    //Test SendEmail con mensake nulo
     @Test
     void testSendEmailNullMessage() {
-        // Arrange: Definir un mensaje nulo
+        // Arrange
         String email = "test@example.com";
         String message = null;
 
-        // Act: Llamar al método sendEmail con un mensaje nulo
+        // Act
         boolean result = mailerStub.sendEmail(email, message);
 
-        // Assert: Verificar que el correo no se envíe con un mensaje nulo
+        // Assert
         assertFalse(result, "El correo no debería ser enviado con un mensaje nulo.");
     }
 }

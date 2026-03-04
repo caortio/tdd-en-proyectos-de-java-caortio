@@ -23,8 +23,8 @@ public class Repositorio {
     }
 
     // Marca tarea como completada
-    public void markTaskCompleted(int index) {
-        dbStub.markTaskAsCompleted(index);
+    public boolean markTaskCompleted(int index) {
+        return dbStub.markTaskAsCompleted(index);
     }
     
     // Obtiene tareas incompletas

@@ -1,8 +1,10 @@
+//Tests unitarios para la clase Servicio
 package com.tt1.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,68 +15,77 @@ public class ServicioTest {
     private MailerStub mailerStub;
     private Repositorio repositorio;
     private Servicio servicio;
-    private ToDo task1;
-    private ToDo task2;
 
     @BeforeEach
     public void setUp() {
-        // Inicializamos los objetos necesarios para las pruebas
         dbStub = new DBStub();
         mailerStub = new MailerStub();
         repositorio = new Repositorio(dbStub);
         servicio = new Servicio(repositorio, mailerStub);
-
-        // Creamos algunas tareas para las pruebas
-        task1 = new ToDo("Tarea 1", "Descripción 1", new Date(), false);
-        task2 = new ToDo("Tarea 2", "Descripción 2", new Date(System.currentTimeMillis() - 10000), false); 
     }
 
+    //Test AddTask
     @Test
     public void testAddTask() {
-        // Act: Agregar tarea a través del servicio
-        servicio.addTask("Tarea 1", "2026-02-25");
+        // Arrange
+    	String nombre = "Tarea 1";
+    	String fecha = "2026-02-25";
+    	
+    	//Act
+        servicio.addTask(nombre, fecha);
 
-        // Assert: Verificar que la tarea se haya almacenado en el repositorio
-        assertEquals(1, dbStub.getToDoList().size());
-        assertEquals("Tarea 1", dbStub.getToDoList().get(0).getNombre());
+        // Assert
+        List<ToDo> incompletas = servicio.getIncompleteTasks();
+        assertEquals(1, incompletas.size());
+
+        ToDo tarea = incompletas.get(0);
+        assertEquals(nombre, tarea.getNombre());
+        assertFalse(tarea.isCompletado());
     }
 
+    //Test AddEmail
     @Test
     public void testAddEmail() {
-        // Act: Agregar email al mailer stub
-        String email = "test@example.com";
-        boolean result = mailerStub.sendEmail(email, "Este es un mensaje de prueba");
+        // Act
+        servicio.addEmail("test@example.com");
+        servicio.addEmail("test2@empresa.com");
 
-        // Assert: Verificar que el envío del correo fue exitoso
-        assertTrue(result, "El email no fue enviado correctamente.");
+        // Assert
+        assertTrue(dbStub.getEmailAgenda().contains("test@example.com"));
+        assertTrue(dbStub.getEmailAgenda().contains("test2@empresa.com"));
+        assertEquals(2, dbStub.getEmailAgenda().size());
     }
 
+    //Test MarkTaskAsCompleted
     @Test
     public void testMarkTaskAsCompleted() {
-        // Arrange: Almacenamos la tarea
-        repositorio.storeTask(task1);
+        // Arrange
+    	servicio.addTask("Tarea 1", "2026-03-10");
+        servicio.addTask("Tarea 2", "2026-03-15");
+        assertEquals(2, servicio.getIncompleteTasks().size());
 
-        // Act: Marcar la tarea como completada
-        servicio.markTaskAsCompleted(0);
-        
-        // Act: Buscamos la tarea directamente en el repositorio
-        ToDo foundTask = repositorio.getTaskById(0);
+        // Act
+        boolean exito = servicio.markTaskAsCompleted(0);
 
-        // Assert: Verificar que la tarea está marcada como completada
-        assertTrue(foundTask.isCompletado(), "La tarea no fue marcada como completada.");
+        // Assert
+        assertTrue(exito);
+        assertEquals(1, servicio.getIncompleteTasks().size());
     }
-
+    
+    //Test CheckForOverdueTasks
     @Test
     public void testCheckForOverdueTasks() {
-        // Arrange: Agregar tareas a la base de datos
-        repositorio.storeTask(task1);  // tarea sin vencerse
-        repositorio.storeTask(task2);  // tarea vencida
+        // Arrange:
+    	servicio.addTask("Informe mensual", "2026-02-28");
+        servicio.addTask("Reunión pendiente", "2026-03-10"); 
 
-        // Act: Llamamos al método que revisa tareas vencidas
+        servicio.addEmail("jefe@empresa.com");
+        servicio.addEmail("equipo@proyecto.com");
+
+        // Act
         servicio.checkForOverdueTasks();
 
-        // Assert: Verificar que el método sendEmail ha sido llamado para las tareas vencidas
-        // Dado que no almacenamos los correos, verificamos simplemente que el método sendEmail haya devuelto "true"
+        // Assert
         assertTrue(mailerStub.sendEmail("test@example.com", "Alerta: La tarea 'Tarea 2' ha vencido."),
                 "No se enviaron correos de alerta para las tareas vencidas.");
     }

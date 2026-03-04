@@ -9,6 +9,9 @@ public class ToDo implements Serializable {
     private Date fechaLimite;
     private boolean completado;
 
+    //Constructor vacío
+    public ToDo() {}
+    
     // Constructor
     public ToDo (String nombre, String descripcion, Date fechaLimite, boolean completado) {
         this.nombre = nombre;
@@ -17,7 +20,7 @@ public class ToDo implements Serializable {
         this.completado = completado;
     }
 
-    // Getters y Setters
+	// Getters y Setters
     public String getNombre() {
         return nombre;
     }
