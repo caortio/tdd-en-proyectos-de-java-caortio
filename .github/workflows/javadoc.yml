@@ -1,0 +1,32 @@
+name: Generar y publicar Javadoc
+
+on:
+  push:
+    branches:    
+      - stable   # Se ejecuta solo cuando hay push en stable
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Chequear repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'   # Ajusta a tu versión de Java
+
+      - name: Generar Javadoc
+        run: |
+          mkdir -p javadoc
+          javadoc -d javadoc -author -version -sourcepath src/main/java com.tt1.test
+
+      - name: Publicar Javadoc en GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./javadoc
+          publish_branch: gh-pages
