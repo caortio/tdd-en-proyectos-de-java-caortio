@@ -41,6 +41,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    environment:
+      name: github-pages  # Este es el entorno obligatorio
     steps:
       - name: Publicar Javadoc en GitHub Pages
         id: deployment
