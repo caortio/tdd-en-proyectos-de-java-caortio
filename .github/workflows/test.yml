@@ -1,18 +1,12 @@
 name: Test and update early
 
 on:
-<<<<<<< Updated upstream
   push:   
     branches:
       - main   # se ejecuta en cada commit en main
-=======
-  push:
-    branches: ["main"]
-  workflow_dispatch:
 
 permissions:
   contents: write
->>>>>>> Stashed changes
 
 jobs:
   test-and-merge:
