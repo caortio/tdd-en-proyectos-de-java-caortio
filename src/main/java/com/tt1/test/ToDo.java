@@ -112,7 +112,7 @@ public class ToDo implements Serializable {
      * @param completado true para marcar la tarea como completada, false para marcarla como pendiente.
      */
 	public void setCompletado(boolean completado) {
-		this.completado = b;	
+		this.completado = completado;	
 	}
 
 }
