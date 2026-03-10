@@ -1,35 +1,38 @@
-name: Test
+name: Test and update early
 
 on:
+<<<<<<< Updated upstream
   push:   
     branches:
       - main   # se ejecuta en cada commit en main
+=======
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+>>>>>>> Stashed changes
 
 jobs:
   test-and-merge:
     runs-on: ubuntu-latest
 
     steps:
-      #Clonar repositorio
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      #Configurar Java
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
-      #Ejecutar tests
-      - name: Run tests
-        run: |
-          javac -d out $(find src/main/java src/test/java -name "*.java")
-          java -cp out org.junit.runner.JUnitCore com.tt1.test.AppTest
+      - name: Build and run tests
+        run: mvn test
 
-      #Actualizar rama early si tests pasan
       - name: Merge main into early
-        if: success()  # solo si los tests pasan
+        if: success()
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
