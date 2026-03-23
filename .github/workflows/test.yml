@@ -30,13 +30,9 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          #Asegurar que estamos en main y actualizado
-          git checkout main
-          git pull origin main --ff-only
-          #Traer early y movernos a ella
-          git fetch origin early:early 
-          git checkout early
-          #Hacer merge de main a early
-          git merge main --allow-unrelated-histories -m "Auto-update early from main after tests passed"
-          #Push a early
-          git push origin early
+          
+          git fetch origin
+          git checkout early || git checkout -b early
+
+          git reset --hard origin/main
+          git push origin early --force
