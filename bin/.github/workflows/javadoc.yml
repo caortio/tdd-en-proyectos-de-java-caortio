@@ -1,0 +1,49 @@
+name: Generar y publicar Javadoc
+
+on:
+  push:
+    branches: ["stable"]   # Solo cuando hay push en stable
+  workflow_dispatch:       # Permite ejecutar manualmente
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Chequear repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Generar Javadoc
+        run: |
+          mkdir -p javadoc
+          javadoc -d javadoc -author -version -sourcepath src/main/java com.tt1.test
+
+      - name: Subir artifacts para GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./javadoc
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages  # Este es el entorno obligatorio
+    steps:
+      - name: Publicar Javadoc en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
