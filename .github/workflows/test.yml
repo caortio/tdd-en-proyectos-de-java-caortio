@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-name: Test and update early
-=======
 name: Tests y actualizar early
->>>>>>> Stashed changes
 
 on:
   push:   
@@ -13,17 +9,6 @@ permissions:
   contents: write
 
 jobs:
-<<<<<<< Updated upstream
-  test-and-merge:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v3
-=======
   test-and-update-early:
     runs-on: ubuntu-latest
 
@@ -33,29 +18,18 @@ jobs:
 
       - name: Configurar Java
         uses: actions/setup-java@v4
->>>>>>> Stashed changes
         with:
           distribution: temurin
           java-version: '17'
 
-<<<<<<< Updated upstream
-      - name: Build and run tests
-        run: mvn test
-=======
       - name: Ejecutar tests
         run: mvn clean test 
->>>>>>> Stashed changes
 
       - name: Merge main into early
         if: success()
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-<<<<<<< Updated upstream
-          git fetch origin early
-          git checkout early
-          git merge main --allow-unrelated-histories -m "Auto-update early from main after tests passed"
-=======
           #Asegurar que estamos en main y actualizado
           git checkout main
           git pull origin main --ff-only
@@ -65,5 +39,4 @@ jobs:
           #Hacer merge de main a early
           git merge main --allow-unrelated-histories -m "Auto-update early from main after tests passed"
           #Push a early
->>>>>>> Stashed changes
           git push origin early
